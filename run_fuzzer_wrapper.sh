@@ -21,10 +21,13 @@ libCRS register-fetch-dir seed $CORPUS_OUT &
 
 mkdir -p "$CORPUS_OUT" "$POV_OUT"
 
-# Seed corpus if exists
-SEED_CORPUS="/out/${HARNESS_NAME}_seed_corpus"
-if [ -d "$SEED_CORPUS" ]; then
-    cp -r "$SEED_CORPUS"/* "$CORPUS_OUT"/ 2>/dev/null || true
+# Seed corpus if exists (zip archive or directory)
+SEED_CORPUS_ZIP="/out/${HARNESS_NAME}_seed_corpus.zip"
+SEED_CORPUS_DIR="/out/${HARNESS_NAME}_seed_corpus"
+if [ -f "$SEED_CORPUS_ZIP" ]; then
+    unzip -q -o -j "$SEED_CORPUS_ZIP" -d "$CORPUS_OUT" 2>/dev/null || true
+elif [ -d "$SEED_CORPUS_DIR" ]; then
+    cp -r "$SEED_CORPUS_DIR"/* "$CORPUS_OUT"/ 2>/dev/null || true
 fi
 
 # Count CPUs from range string (e.g., "0-7" or "0,2,4-6")
